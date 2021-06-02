@@ -68,6 +68,7 @@ def installDriver():
 
         # 开启此项服务
         bRet = StartService(hs)
+        messages.append(path)
         if not bRet:
             dwRtn = win32api.GetLastError()
             if dwRtn != ERROR_IO_PENDING and dwRtn != ERROR_SERVICE_ALREADY_RUNNING:

@@ -16,7 +16,7 @@ class ChangeCar:
     def change_car(self, original, target):
         # 窗口找不到 直接False
         if not Window.pid_extend(self.pid):
-            print "window out date reChange..."
+            print("window out date reChange...")
             return False
         h_process = None
         try:
@@ -31,16 +31,16 @@ class ChangeCar:
             # self.scan_2 = MemoryUtils.search_integer(h_process, 10051, True)
             # self.scan_3 = MemoryUtils.search_integer(h_process, self.original_id, True)
             if len(self.scan_1) <= 1:
-                print('reScan...')
+                print('sCan 1 ...')
                 scan_arr = MemoryUtils.search_integer_batch(self.pid, [10020, 10043, original])
                 self.scan_1 = scan_arr[10020]
-                self.scan_2 = scan_arr[10043]
-                if len(self.scan_1) <= 1 and len(self.scan_2) <= 1:
+                if len(self.scan_1) <= 1:
                     # 关闭进程句柄
                     MemoryUtils.close_handle(h_process)
                     # 还原tp
                     MemoryUtils.unLoad_kill_tp()
                     return False
+                print(" scan 1 num ==> " + str(len(self.scan_1)))
                 # 读板车基址
                 # self.scan_1 = BaseModuleAddrUtils.get_moudle_base_addr(self.pid, "Top-Kart.dll", 0x025F1F28,
                 #                                                        [0x100, 0x100, 0x554])
@@ -51,8 +51,6 @@ class ChangeCar:
                 # for i in self.scan_1:
                 #     print hex(int(i.encode("utf-8")))
 
-            # if len(self.scan_2) == 0:
-            #     self.scan_2 = MemoryUtils.search_integer(self.pid, 10032)
             if self.original_id != original:
                 self.original_id = original
                 self.scan_3 = MemoryUtils.search_integer(self.pid, self.original_id)
@@ -63,7 +61,6 @@ class ChangeCar:
                 MemoryUtils.unLoad_kill_tp()
                 return False
             print("1 num ==> " + str(len(self.scan_1)))
-            # print("2 num ==> " + str(len(self.scan_2)))
             print("3 num ==> " + str(len(self.scan_3)))
 
             # 修改三个结果集为目标代码
@@ -73,11 +70,8 @@ class ChangeCar:
             if not res_1:
                 print("reChanging scan1 fail ! ")
                 # res_1 = MemoryUtils.write_memory_batch(h_process, self.scan_1, self.target_id)
-            res_2 = MemoryUtils.write_memory_batch(h_process, self.scan_2, self.target_id)
-            if not res_2:
-                print("reChanging scan2 fail ! ")
             res_3 = MemoryUtils.write_memory_batch(h_process, self.scan_3, self.target_id)
-            if res_1 == 0 and res_2 == 0:
+            if res_1 == 0:
                 return False
             if not res_3:
                 print("reChanging scan3 fail !")
@@ -90,7 +84,8 @@ class ChangeCar:
             MemoryUtils.unLoad_kill_tp()
 
             return True
-        except ValueError:
+        except Exception as e:
+            print(e)
             return False
         finally:
             # 还原tp

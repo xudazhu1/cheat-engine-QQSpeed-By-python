@@ -4,6 +4,13 @@ import ctypes
 import inspect
 import threading
 
+from concurrent import futures
+from concurrent.futures import Future
+
+
+pool = futures.ThreadPoolExecutor(max_workers=8)
+
+
 
 def thread_it(func, *args):
     # '''将函数放入线程中执行'''
@@ -14,6 +21,18 @@ def thread_it(func, *args):
     # 启动线程
     t.start()
     return t
+
+
+def threadByFuture(func, *args):
+    # '''将函数放入线程中执行'''
+    # 创建线程
+    t = pool.submit(func, *args)
+    # 守护线程
+    # t.setDaemon(True)
+    # 启动线程
+    # t.start()
+    return t
+
 
 
 def _async_raise(tid, exctype):

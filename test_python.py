@@ -1,5 +1,6 @@
 # coding=utf-8
-import Tkinter as Tk
+import importlib
+import tkinter as Tk
 import sys
 
 import tkinter.messagebox
@@ -13,7 +14,6 @@ import MyTread
 import MemoryUtils
 from ChangeUtils import ChangeCar
 import DriverUtil
-from tkinter import ttk
 
 
 # 通过窗口句柄获取pid
@@ -72,7 +72,8 @@ def gai():
 
     while ret == 0:
         # print("change Fail.. reload...")
-        print(DriverUtil.errors)
+        for e in DriverUtil.messages:
+            print(e)
         reload_lib()
         ret = changeModel.change_car(addr, mv)
         print("result: " + str(ret))
@@ -103,7 +104,6 @@ def reload_lib():
     global handle
     # 关闭kill hack.dll的线程
     end_kills()
-
     try:
         changeModel.fix()
     except ValueError:
@@ -122,10 +122,26 @@ def reload_window():
     root.deiconify()
 
 
-reload(sys)
-sys.setdefaultencoding('utf8')
+loaded = False
+
+
+def loadDriver():
+    global loaded
+    if loaded:
+        DriverUtil.unloadDriver()
+        loaded = False
+    else:
+        DriverUtil.installDriver()
+        loaded = True
+
+
+importlib.reload(sys)
+# sys.setdefaultencoding('utf8')
 threads = []
-handle = QSpeedW.get_window4speed()[0]
+window_temp = QSpeedW.get_window4speed()
+handle = 0
+if len(window_temp) > 0:
+    handle = window_temp[0]
 # 改车模块对象 传入QQ飞车窗口句柄
 changeModel = ChangeCar(handle)
 # threads.append(MyTread.thread_it(Window.for_kill_by_name, "HACK.DLL"))
@@ -171,11 +187,13 @@ Tk.Button(root, command=lambda: gai(), text='     改TA!   ').place(x=320, y=1)
 Tk.Button(root, command=lambda: fix(), text='  还原车辆代码  ').place(x=430, y=1)
 
 Tk.Button(root, command=lambda: reload_window(), text=' 重新读取飞车窗口 ').place(x=1, y=320)
+# Tk.Button(root, command=lambda: loadDriver(), text=' 安装/删除驱动 ').place(x=150, y=320)
 
 # tk.Button(root, command=lambda: init_window(), text='  重新初始化  ').place(x=320, y=1)
-MyTK.text(root, "tips: 点击按钮自动填入目标ID ", 270, 270)
+MyTK.text(root, "tips: 点击搜索结果或按钮会把 代码自动填入目标ID ", 270, 260)
+MyTK.text(root, "tips: 先进出一次商城再改比较不容易崩溃 ", 270, 280)
 MyTK.text(root, "tips: 改完进退商城见效", 270, 300)
-MyTK.text(root, "还原代码/重新读取窗口 都可能使改过车的飞车窗口崩溃", 270, 320)
+MyTK.text(root, "tips: 崩溃是常规操作, 莫慌, 重开游戏再改", 270, 320)
 
 
 def checked(value):
@@ -236,7 +254,7 @@ entry.bind('<KeyRelease>', on_keyrelease)
 
 listbox = Tk.Listbox(root)
 listbox.place(x=1, y=80)
-#listbox.bind('<Double-Button-1>', on_select)
+# listbox.bind('<Double-Button-1>', on_select)
 listbox.bind('<<ListboxSelect>>', on_select)
 listbox_update(test_list)
 
@@ -256,7 +274,6 @@ def get_focus(*args):
 # 鼠标进入事件 使它获取焦点 然后混动条生效
 listbox.bind("<Enter>", lambda x: listbox.focus_set())
 listbox.bind("<Leave>", lambda x: root.focus_set())
-
 
 # 常用代碼
 
@@ -280,7 +297,6 @@ Tk.Button(root, command=lambda: checked(94838), text='上古魔尊').place(x=281
 Tk.Button(root, command=lambda: checked(85942), text='圣域大天使').place(x=381, y=150)
 Tk.Button(root, command=lambda: checked(110711), text='众神之神-麒麟').place(x=481, y=150)
 
-
 Tk.Button(root, command=lambda: checked(106673), text='爱神维纳斯').place(x=181, y=180)
 Tk.Button(root, command=lambda: checked(106676), text='炫金盘龙').place(x=281, y=180)
 Tk.Button(root, command=lambda: checked(90945), text='众神之神').place(x=381, y=180)
@@ -289,8 +305,6 @@ Tk.Button(root, command=lambda: checked(107370), text='至尊·麦凯伦').place
 Tk.Button(root, command=lambda: checked(86998), text='疾影M18').place(x=281, y=210)
 Tk.Button(root, command=lambda: checked(112176), text='冥王·哈迪斯').place(x=381, y=210)
 Tk.Button(root, command=lambda: checked(112181), text='神圣雅典娜').place(x=481, y=210)
-
-
 
 # 为关闭窗口按钮绑定结束程序事件
 root.protocol("WM_DELETE_WINDOW", on_closing)

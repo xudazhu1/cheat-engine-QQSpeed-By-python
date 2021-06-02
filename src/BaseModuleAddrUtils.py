@@ -161,6 +161,7 @@ def get_process_image_base(ProcessId, moduleName):
             CloseHandle(h_module_snap)
 
 
+# 读取模块基址 + 偏移
 def get_moudle_base_addr(pid, module_name, module_offset, offset_arr):
     # m = Memory64(pid)  # 我们创建一个内存的操作类
     module_base_addr = get_process_image_base(pid, module_name)
@@ -209,6 +210,6 @@ def code():
     # addr = ReadVirtualMemory64(addr)  # addr = [addr]
     # addr = ReadVirtualMemory64(addr + 0x65D0)  # addr = [addr+0x65D0]
     # addr = addr + 0x32D0 + 0x00000434 + 0x8  # 这个时候我们的addr其实已经是存放x坐标的地址了，我们可以在下面进行测试
-    print addr
+    print(addr)
     ret = read_virtual_memory64(_hGameHandle, addr, 4)  # 这里记得只读取四个字节，多了的话读取到的数据肯定就是错误的了
     print("x坐标", ret)

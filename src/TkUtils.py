@@ -1,6 +1,6 @@
 # coding=utf-8
 # python3  使用 tkinter
-import Tkinter as tk
+import tkinter as tk
 
 
 # 创建一个窗口  指定窗口大小
