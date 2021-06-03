@@ -56,6 +56,10 @@ def gai():
     global changeModel
     global handle
     if handle == 0:
+        windowTemp = QSpeedW.get_window4speed()
+        if len(windowTemp) == 0:
+            tkinter.messagebox.showinfo('提示! ', '没有检测到飞车窗口! ')
+            return False
         handle = QSpeedW.get_window4speed()[0]
         changeModel = ChangeCar(handle)
 
@@ -166,8 +170,8 @@ L1.place(x=1, y=5)
 sv = Tk.StringVar()
 # sv.trace("w", lambda name, index, : no_thing())
 E1 = Tk.Entry(root, bd=6, width=8, textvariable=sv)
-# 默认金焰战神
-sv.set(63702)
+# 默认 黑海鸡
+sv.set(112178)
 E1.place(x=50, y=1)
 
 L = Tk.Label(root, text="  ==> ")
@@ -179,8 +183,8 @@ L12.place(x=160, y=5)
 sv2 = Tk.StringVar()
 # sv2.trace("w", lambda name, index, : no_thing())
 E12 = Tk.Entry(root, bd=6, width=8, textvariable=sv2)
-# 默认黄金爆天甲
-sv2.set(106674)
+# 默认
+sv2.set(81293)
 E12.place(x=230, y=1)
 
 Tk.Button(root, command=lambda: gai(), text='     改TA!   ').place(x=320, y=1)

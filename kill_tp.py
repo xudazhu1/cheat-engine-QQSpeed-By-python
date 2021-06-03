@@ -1,4 +1,6 @@
 # coding=utf-8
+import numpy
+
 import MemoryUtils
 import QSpeedW
 import Window
@@ -34,6 +36,14 @@ if len(window_temp) > 0:
     handle = window_temp[0]
 pid = Window.get_pid_window(handle)
 scan_arr = MemoryUtils.search_integer_batch(pid, [10020, 10043, 63702])
+# scan_arr[10020] = numpy.sort(scan_arr[10020])
+# print(scan_arr[10020])
+# index = 0
+# for num in scan_arr[10020]:
+#     if index > 1 and scan_arr[10020][index] <= scan_arr[10020][index-1]:
+#         print("gt ? ", scan_arr[10020][index], scan_arr[10020][index-1])
+#     index = index + 1
+
 print(len(scan_arr[10020]))
 print(len(scan_arr[10043]))
 print(len(scan_arr[63702]))

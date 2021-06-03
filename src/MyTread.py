@@ -5,11 +5,9 @@ import inspect
 import threading
 
 from concurrent import futures
-from concurrent.futures import Future
 
 
 pool = futures.ThreadPoolExecutor(max_workers=8)
-
 
 
 def thread_it(func, *args):
@@ -32,7 +30,6 @@ def threadByFuture(func, *args):
     # 启动线程
     # t.start()
     return t
-
 
 
 def _async_raise(tid, exctype):

@@ -1,12 +1,9 @@
 # coding=utf-8
-import os
 import time
-import uuid
 
 import win32api
 import win32con
 import win32gui
-import win32ui
 
 import Window
 

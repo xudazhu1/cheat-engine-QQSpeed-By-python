@@ -1,4 +1,6 @@
 # coding=utf-8
+import numpy
+
 import MemoryUtils
 import Window
 
@@ -45,6 +47,8 @@ class ChangeCar:
                 # self.scan_1 = BaseModuleAddrUtils.get_moudle_base_addr(self.pid, "Top-Kart.dll", 0x025F1F28,
                 #                                                        [0x100, 0x100, 0x554])
                 # 整理10020
+                # 排序10020的搜索结果
+                self.scan_1 = numpy.sort(self.scan_1)
                 self.scan_1 = select_addr(self.scan_1)
                 self.original_id = original
                 self.scan_3 = scan_arr[self.original_id]
