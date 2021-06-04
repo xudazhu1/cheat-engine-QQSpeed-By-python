@@ -5,7 +5,7 @@ main  test_python.py
 to exe Script  
 # pyinstaller -F -p ../../src --add-data=../../dll/FileDriver.sys;. --uac-admin -r ../../test_python.exe.manifest,1 ../../test_python.py  
 
-~~use python 2.7 win32 pyinstaller 3.6~~
+~~use python 2.7 win32 pyinstaller 3.6~~ python3.9 win64
 
 QQ飞车改车2.6.1 更新日志:  
  : 修复2.6版本中由于32位升级到64位内存值变量类型不匹配造成的修改失败的问题  
