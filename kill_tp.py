@@ -1,63 +1,23 @@
 # coding=utf-8
-import numpy
 
-import MemoryUtils
-import QSpeedW
-import Window
 import DriverUtil
-import ChangeUtils
-import os
-from ctypes import *
-import time
+import MemoryUtils
+import TkUtils as MyTK
+
+root = MyTK.create_window("CE卡图标 by easy", "290x30")
+
+# 结束进程
+def on_closing():
+    MemoryUtils.close_dll()
+    root.destroy()
 
 
-# kill_tp_dll = windll.LoadLibrary("./dll/kill-tp.dll")
-# kill_tp_dll.Uninstallthedriver()
-# MemoryUtils.install_kill_tp()
+# pyinstaller --windowed -F -p ../../.. -p C:\Windows\SysWOW64\downlevel --paths C:\Windows\System32\downlevel --add-data=../../dll/FileDriver.sys;. --uac-admin -r ../../test_python.exe.manifest,1 ../../test_python.py
 
-
-# MemoryUtils.uninstall_kill_tp()
-# DriverUtil.installDriver()
-#
-
-
-path = "D:\project\my-python32\dll\FileDriver.sys"
-driverName = "DriverQSpeedByEasy"
-
-
-print("当前路径", os.getcwd())
 DriverUtil.installDriver()
-
-startTime = time.time()
-
-window_temp = QSpeedW.get_window4speed()
-handle = 0
-if len(window_temp) > 0:
-    handle = window_temp[0]
-pid = Window.get_pid_window(handle)
-scan_arr = MemoryUtils.search_integer_batch(pid, [10020, 10043, 63702])
-# scan_arr[10020] = numpy.sort(scan_arr[10020])
-# print(scan_arr[10020])
-# index = 0
-# for num in scan_arr[10020]:
-#     if index > 1 and scan_arr[10020][index] <= scan_arr[10020][index-1]:
-#         print("gt ? ", scan_arr[10020][index], scan_arr[10020][index-1])
-#     index = index + 1
-
-print(len(scan_arr[10020]))
-print(len(scan_arr[10043]))
-print(len(scan_arr[63702]))
-
-print(time.time() - startTime)
-
-DriverUtil.unloadDriver()
-# print(DriverUtil.messages)
-for e in DriverUtil.messages:
-    print(e)
-
-# print unicode(eval(DriverUtil.messages), "gbk")
-
-
+# 为关闭窗口按钮绑定结束程序事件
+root.protocol("WM_DELETE_WINDOW", on_closing)
+root.mainloop()
 
 
 

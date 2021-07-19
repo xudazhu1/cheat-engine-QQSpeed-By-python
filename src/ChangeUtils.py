@@ -7,12 +7,15 @@ import Window
 
 class ChangeCar:
     def __init__(self, hwnd):
-        self.scan_1 = []
-        self.scan_2 = []
-        self.scan_3 = []
         self.original_id = 0
         self.target_id = 0
         self.pid = Window.get_pid_window(hwnd)
+        self.scanCache = {10020: []}
+
+    # 合并搜索结果
+    def mergeAddr(self, scanAddrTemp):
+        for key, value in scanAddrTemp.items():
+            self.scanCache[key] = value
 
     # 原理搜索10020板车代码 和 original 自己装备的车的代码 直接改成 target目标车的代码
     def change_car(self, original, target):
@@ -25,62 +28,66 @@ class ChangeCar:
             # 过tp
             MemoryUtils.install_kill_tp()
 
-            self.target_id = target
+            # self.target_id = target
             # 获得操作句柄
             h_process = MemoryUtils.open_process(self.pid)
-            # 搜索10043 和 10051
-            # self.scan_1 = MemoryUtils.search_integer(h_process, 10043, True)
-            # self.scan_2 = MemoryUtils.search_integer(h_process, 10051, True)
-            # self.scan_3 = MemoryUtils.search_integer(h_process, self.original_id, True)
-            if len(self.scan_1) <= 1:
+            # 搜索10020
+            if len(self.scanCache[10020]) <= 1 or self.original_id != original:
                 print('sCan 1 ...')
-                scan_arr = MemoryUtils.search_integer_batch(self.pid, [10020, 10043, original])
-                self.scan_1 = scan_arr[10020]
-                if len(self.scan_1) <= 1:
+                scanAddrTemps = []
+                # todo 处理 待搜索项 不包含就搜
+                if not (self.scanCache.__contains__(original)):
+                    scanAddrTemps.append(original)
+                if not (self.scanCache.__contains__(10020)) or len(self.scanCache[10020]) <= 1:
+                    scanAddrTemps.append(10020)
+
+                scan_arr_temp = MemoryUtils.search_integer_batch(self.pid, scanAddrTemps)
+                self.mergeAddr(scan_arr_temp)
+                if len(self.scanCache[10020]) <= 1:
                     # 关闭进程句柄
                     MemoryUtils.close_handle(h_process)
                     # 还原tp
                     MemoryUtils.unLoad_kill_tp()
                     return False
-                print(" scan 1 num ==> " + str(len(self.scan_1)))
+                print(" scan 1 num ==> " + str(len(self.scanCache[10020])))
                 # 读板车基址
-                # self.scan_1 = BaseModuleAddrUtils.get_moudle_base_addr(self.pid, "Top-Kart.dll", 0x025F1F28,
+                # self.scanCache[10020] = BaseModuleAddrUtils.get_moudle_base_addr(self.pid, "Top-Kart.dll", 0x025F1F28,
                 #                                                        [0x100, 0x100, 0x554])
                 # 整理10020
                 # 排序10020的搜索结果
-                self.scan_1 = numpy.sort(self.scan_1)
-                self.scan_1 = select_addr(self.scan_1)
+                self.scanCache[10020] = numpy.sort(self.scanCache[10020])
+                self.scanCache[10020] = select_addr(self.scanCache[10020])
                 self.original_id = original
-                self.scan_3 = scan_arr[self.original_id]
-                # for i in self.scan_1:
-                #     print hex(int(i.encode("utf-8")))
+                # self.scanCache[original] = scan_arr[self.original_id]
 
-            if self.original_id != original:
-                self.original_id = original
-                self.scan_3 = MemoryUtils.search_integer(self.pid, self.original_id)
-            if len(self.scan_3) <= 1:
+            # if self.original_id != original:
+            #     self.original_id = original
+            #     self.scanCache[original] = MemoryUtils.search_integer(self.pid, self.original_id)
+            if len(self.scanCache[original]) <= 1:
                 # 关闭进程句柄
                 MemoryUtils.close_handle(h_process)
                 # 还原tp
                 MemoryUtils.unLoad_kill_tp()
                 return False
-            print("1 num ==> " + str(len(self.scan_1)))
-            print("3 num ==> " + str(len(self.scan_3)))
+            print("1 num ==> " + str(len(self.scanCache[10020])))
+            print("3 num ==> " + str(len(self.scanCache[original])))
 
             # 修改三个结果集为目标代码
             # 写板车基址
-            # res_1 = MemoryUtils.write_memory_integer(h_process, self.scan_1, self.target_id)
-            res_1 = MemoryUtils.write_memory_batch(h_process, self.scan_1, self.target_id)
+            # 这里按照 10020 的目标id改
+            res_1 = MemoryUtils.write_memory_batch(h_process, self.scanCache[10020], self.target_id)
             if not res_1:
                 print("reChanging scan1 fail ! ")
-                # res_1 = MemoryUtils.write_memory_batch(h_process, self.scan_1, self.target_id)
-            res_3 = MemoryUtils.write_memory_batch(h_process, self.scan_3, self.target_id)
+                # res_1 = MemoryUtils.write_memory_batch(h_process, self.scanCache[10020], self.target_id)
+            if original != 10020:
+                # 这里按照实际填的地址改
+                res_3 = MemoryUtils.write_memory_batch(h_process, self.scanCache[original], target)
+                if not res_3:
+                    print("reChanging scan3 fail !")
+                    return False
             if res_1 == 0:
                 return False
-            if not res_3:
-                print("reChanging scan3 fail !")
-                return False
-                # res_3 = MemoryUtils.write_memory_batch(h_process, self.scan_3, self.target_id)
+
             # 关闭进程句柄
             MemoryUtils.close_handle(h_process)
 
@@ -105,14 +112,15 @@ class ChangeCar:
 
             # 获得操作句柄
             h_process = MemoryUtils.open_process(self.pid)
-            # 修改三个结果集为目标代码
-            res_1 = MemoryUtils.write_memory_batch(h_process, self.scan_1, 10020)
-            res_2 = MemoryUtils.write_memory_batch(h_process, self.scan_2, 10043)
-            res_3 = MemoryUtils.write_memory_batch(h_process, self.scan_3, self.original_id)
-
+            # 修改缓存里的个结果集为key todo
+            result = True
+            for key, value in self.scanCache.items():
+                res_1 = MemoryUtils.write_memory_batch(h_process, value, key)
+                if not res_1:
+                    result = res_1
             # 关闭进程句柄
             MemoryUtils.close_handle(h_process)
-            return res_1 and res_2 and res_3
+            return result
         finally:
             # 还原tp
             MemoryUtils.unLoad_kill_tp()
