@@ -6,7 +6,7 @@ cheat engine QQSpeed By python
 ```
 pyinstaller -F -p ../../src --add-data=../../dll/FileDriver.sys;. --uac-admin -r ../../test_python.exe.manifest,1 ../../test_python.py  
 ```
-~~use python 2.7 win32 pyinstaller 3.6~~ python3.9 win64
+~~use python 2.7 win32 pyinstaller 3.6~~ python3.7 win64
 
 ##### QQ飞车改车2.6.1 更新日志:  
  : 修复2.6版本中由于32位升级到64位内存值变量类型不匹配造成的修改失败的问题  
@@ -19,3 +19,7 @@ pyinstaller -F -p ../../src --add-data=../../dll/FileDriver.sys;. --uac-admin -r
  : 更新改车ID填写UI 现在可以直接选车  
  : 使用友站的车子接口 动态获取车子( ﹁ ﹁ ) ~→  
  : 记住改车ID 下次打开软件还在  
+##### QQ飞车改车2.7.1 更新日志:  
+: 由py3.9.5改成py3.7.8 解决3.9.5打包依赖c++出现分电脑打不开的问题
+
+

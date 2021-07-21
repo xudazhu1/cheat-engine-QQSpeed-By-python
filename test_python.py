@@ -163,7 +163,7 @@ changeModel = ChangeCar(handle)
 # 打包exe脚本 pip install pyinstaller==3.1(划掉)
 # pyinstaller -F -p ../../src --add-data=../../dll/kill-tp.dll;. --uac-admin -r ../../test_python.exe.manifest,1 ../../test_python.py
 # pyinstaller -F -p ../../src --add-data=../../dll/kill-tp.dll;. --uac-admin  ../../test_python.py
-# pyinstaller --windowed -F -p ../../src -p C:\Windows\SysWOW64\downlevel --paths C:\Windows\System32\downlevel --add-data=../../dll/FileDriver.sys;. --uac-admin -r ../../test_python.exe.manifest,1 ../../test_python.py
+# pyinstaller -F -p ../../src -p C:\Windows\SysWOW64\downlevel --paths C:\Windows\System32\downlevel --add-data=../../dll/FileDriver.sys;. --uac-admin -r ../../test_python.exe.manifest,1 ../../test_python.py
 
 root = MyTK.create_window("改车2.7 by easy", "590x450")
 # 初始化飞车窗口按钮
