@@ -51,6 +51,7 @@ def gai():
     # 获取选取的窗口 获得对应的dll对象和句柄
     # dll_temp = dll
     # handle = QSpeedW.get_window4speed()[0]
+    # print(changeModelV.get())
     global changeModel
     global handle
     if handle == 0:
@@ -60,7 +61,6 @@ def gai():
             return False
         handle = QSpeedW.get_window4speed()[0]
         changeModel = ChangeCar(handle)
-
     ret = changeAddr()
     print("result: " + str(ret))
     index = 0
@@ -83,6 +83,7 @@ def gai():
 def changeAddr():
     global changeModel
     global handle
+    changeModel.model = changeModelV.get()
     # 获取填入的原车代码 和目标车代码
     ret = True
     changeBox2Values = changeBox2.getValues()
@@ -165,7 +166,7 @@ changeModel = ChangeCar(handle)
 # pyinstaller -F -p ../../src --add-data=../../dll/kill-tp.dll;. --uac-admin  ../../test_python.py
 # pyinstaller -F -p ../../src -p C:\Windows\SysWOW64\downlevel --paths C:\Windows\System32\downlevel --add-data=../../dll/FileDriver.sys;. --uac-admin -r ../../test_python.exe.manifest,1 ../../test_python.py
 
-root = MyTK.create_window("改车2.7 by easy", "590x450")
+root = MyTK.create_window("改车2.7.2 by easy", "590x450")
 # 初始化飞车窗口按钮
 # 仨修改组件
 MyTK.text(root, "板车: ", 5, 70)
@@ -181,8 +182,13 @@ changeBox2.setValues(defaultValues)
 
 Tk.Button(root, command=lambda: gai(), text='     改TA!   ').place(x=1, y=1 + 20)
 Tk.Button(root, command=lambda: fix(), text='  还原车辆代码  ').place(x=80, y=1 + 20)
+changeModelV = Tk.IntVar()
+changeModelV.set(1)
+Tk.Radiobutton(root, variable=changeModelV, text='模式1', value=1).place(x=200, y=1 + 20)
+Tk.Radiobutton(root, variable=changeModelV, text='模式2', value=2).place(x=260, y=1 + 20)
+Tk.Radiobutton(root, variable=changeModelV, text='模式3', value=3).place(x=320, y=1 + 20)
 
-Tk.Button(root, command=lambda: reload_window(), text=' 重新读取飞车窗口 ').place(x=185, y=1 + 20)
+# Tk.Button(root, command=lambda: reload_window(), text=' 重新读取飞车窗口 ').place(x=185, y=1 + 20)
 # Tk.Button(root, command=lambda: loadDriver(), text=' 安装/删除驱动 ').place(x=150, y=320)
 
 MyTK.text(root, "tips: 点击常用代码会复制代码, 请手动粘贴", 10, 360)

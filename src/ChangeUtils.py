@@ -9,6 +9,7 @@ class ChangeCar:
     def __init__(self, hwnd):
         self.original_id = 0
         self.target_id = 0
+        self.model = 1
         self.pid = Window.get_pid_window(hwnd)
         self.scanCache = {10020: []}
 
@@ -56,7 +57,12 @@ class ChangeCar:
                 # 整理10020
                 # 排序10020的搜索结果
                 self.scanCache[10020] = numpy.sort(self.scanCache[10020])
-                self.scanCache[10020] = select_addr(self.scanCache[10020])
+                if self.model == 1:
+                    self.scanCache[10020] = select_addr(self.scanCache[10020])
+                elif self.model == 2:
+                    self.scanCache[10020] = select_addr_model2(self.scanCache[10020])
+                else:
+                    self.scanCache[10020] = self.scanCache[10020]
                 self.original_id = original
                 # self.scanCache[original] = scan_arr[self.original_id]
 
@@ -127,7 +133,58 @@ class ChangeCar:
 
 
 # 为10020搜索出的结果集筛选出合适的地址集 用于改车
+def select_addr_model2(arr_addr):
+    res = []
+    index = 0
+    while index < len(arr_addr)/2 and index < len(arr_addr):
+        res.append(arr_addr[index])
+        index += 1
+
+    return res
+
+
+# 为10020搜索出的结果集筛选出合适的地址集 用于改车
 def select_addr(arr_addr):
+    if len(arr_addr) < 200:
+        return arr_addr
+    res = []
+    try:
+        num = 0
+        # str_pref = "0"
+        str_pref = 0
+        index = 0
+        for i in arr_addr:
+            # str_p = hex(int(int(i.encode("utf-8")))[2:5]
+            # print(hex(i)[2:].rjust(8, "0")[0:2])
+            str_pref_temp = hex(i)[2:].rjust(8, "0")[0:2]
+            # print(str_pref_temp)
+            if str_pref_temp == str_pref:
+                num += 1
+
+            else:
+                # if num > 25:
+                # if 7 < num < 12:
+                if num > 100:
+                    index = index - num - 1
+                    break
+                num = 0
+
+            str_pref = str_pref_temp
+            index += 1
+
+        num = index
+        index = 0
+        while index < num and index < len(arr_addr):
+            res.append(arr_addr[index])
+            index += 1
+    except TypeError:
+        return res
+
+    return select_addr400p(arr_addr) if len(res) == 0 or len(res) == len(arr_addr) else res
+
+
+# 为10020搜索出的结果集筛选出合适的地址集 用于改车
+def select_addr400p(arr_addr):
     res = []
     try:
         num = 0
@@ -160,3 +217,4 @@ def select_addr(arr_addr):
         return res
 
     return res
+
