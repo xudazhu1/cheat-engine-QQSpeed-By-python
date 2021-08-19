@@ -5,13 +5,22 @@ env_dist = os.environ  # environ是在os.py中定义的一个dict environ = {}
 local_user_path = env_dist.get('APPDATA') + '\\..\\Local\\ChangeQQSpeed'
 
 
+def write_file(strTemp, fileName):
+    file = open(fileName, 'w')
+    print('写入=>' + str(strTemp))
+    # file.writelines(qq_data_lines)
+    file.write(strTemp)
+    file.close()
+    # read_ids()
+
+
 def write_ids(ids):
     file = open(local_user_path + '\\Id.json', 'w')
     print('写入=>' + str(ids))
     # file.writelines(qq_data_lines)
     json.dump(ids, file)
     file.close()
-    read_ids()
+    # read_ids()
 
 
 def read_ids():

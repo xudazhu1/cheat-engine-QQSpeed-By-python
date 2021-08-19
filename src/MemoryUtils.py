@@ -5,7 +5,6 @@ from ctypes import wintypes
 import numpy as np
 import DriverUtil
 import win32api
-
 import MyTread
 
 
@@ -29,6 +28,26 @@ class MemoryBasicInformation(Structure):
     ]
 
 
+class MemoryBasicInformationBack(Structure):
+    _fields_ = [
+        # 区域基地址
+        ("BaseAddress", wintypes.LPVOID),
+        # 分配基地址
+        ("AllocationBase", wintypes.LPVOID),
+        # 原始保护
+        ("AllocationProtect", wintypes.DWORD),
+        # 区域大小
+        ("RegionSize", c_size_t),
+        # 状态
+        ("State", wintypes.DWORD),
+        # 保护
+        ("Protect", wintypes.DWORD),
+        # 类型
+        ("Type", wintypes.BYTE),
+
+    ]
+
+
 app_data_path = os.environ.get("APPDATA")
 dll_kernel32 = windll.LoadLibrary("kernel32.dll")
 dll_kernel32.ReadProcessMemory.argtypes = \
@@ -38,10 +57,11 @@ dll_kernel32.WriteProcessMemory.argtypes = \
     [wintypes.HANDLE, wintypes.LPVOID, wintypes.LPCVOID, c_size_t, POINTER(c_size_t)]
 dll_kernel32.WriteProcessMemory.restype = wintypes.BOOL
 dll_kernel32.VirtualQueryEx.argtypes = \
-        [wintypes.HANDLE, wintypes.LPCVOID, POINTER(MemoryBasicInformation), c_size_t]
+    [wintypes.HANDLE, wintypes.LPCVOID, POINTER(MemoryBasicInformation), c_size_t]
 dll_kernel32.VirtualQueryEx.restype = c_long
 
 results = []
+
 
 # kill_tp_dll = windll.LoadLibrary("./dll/kill-tp.dll")
 # kill_tp_dll.installdriver(1314520)
@@ -94,6 +114,9 @@ def search_integer_batch(pid, arr_lp_number):
     res = {}
     for lp_number in arr_lp_number:
         res[lp_number] = []
+        # 装精确10020的地址 没有返回说明没搜到
+        res[1] = []
+        res[2] = []
     info = MemoryBasicInformation()
     memory_addr = 0
     h_process = open_process(pid)
@@ -103,7 +126,7 @@ def search_integer_batch(pid, arr_lp_number):
             # print "大于"
             break
         # searchMemoryBlock(h_process, memory_addr, arr_lp_number, res, info)
-        threads.append(MyTread.threadByFuture(searchMemoryBlock,
+        threads.append(MyTread.threadByFuture(searchMemoryBlock4Car,
                                               h_process, memory_addr, arr_lp_number, res, info))
         # 内存地址 ＝ 内存地址 ＋ 内存块信息.区域大小
         memory_addr = memory_addr + info.RegionSize
@@ -119,6 +142,56 @@ def search_integer_batch(pid, arr_lp_number):
     return res
 
 
+def find_10020(full_array, memory_addr, res):
+    carId = 10020
+    indices, = np.where(full_array == carId)
+    if len(indices):
+        for start_ix in indices:
+            if 1  \
+                    and full_array[start_ix - 1] == 15 \
+                    and full_array[start_ix - 2] == 4 \
+                    and full_array[start_ix + 8] == 1 \
+                    and 1:
+                # print("找到了, 10020的地址是" + hex(memory_addr + i * 4))
+                res[1].append(memory_addr + start_ix * 4)
+                res[10020].append(memory_addr + start_ix * 4)
+
+
+def find_car(full_array, carId, memory_addr, res):
+    indices, = np.where(full_array == carId)
+    if len(indices):
+        for start_ix in indices:
+            if 1 \
+                    and full_array[start_ix + 13] == 15 \
+                    and full_array[start_ix + 14] == 44 \
+                    and full_array[start_ix + 15] == 1 \
+                    and 1:
+                    # and full_array[start_ix + 16] == 256 \
+                    # and full_array[start_ix + 19] == 8 \
+                    # and full_array[start_ix + 20] == 0 \
+                    # and full_array[start_ix + 21] == 3 \
+
+                # print("找到了, 10020的地址是" + hex(memory_addr + i * 4))
+                res[2].append(memory_addr + start_ix * 4)
+            else:
+                res[carId].append(memory_addr + start_ix * 4)
+
+
+# 搜索到内存块后详细搜索的函数 用于多线程搜索
+def searchMemoryBlock4Car(h_process, memory_addr, arr_lp_number, res, info):
+    if info.Type != 16777216 and info.Type != 262144 and info.Type != 16 and info.Type != 1 and info.Type != 128:
+        my_buffer = np.zeros(info.RegionSize, int)  # chunk size; should be even bigger ..
+        # 试读一下
+        a = read_memory(h_process, memory_addr, my_buffer.ctypes.data, info.RegionSize, 0)
+        if a != 0:
+            for lp_number in arr_lp_number:
+                if lp_number == 10020:
+                    find_10020(my_buffer, memory_addr, res)
+                find_car(my_buffer, lp_number, memory_addr, res)
+        # print("thread time : ", time.time()- start)
+        return True
+
+
 # 搜索到内存块后详细搜索的函数 用于多线程搜索
 def searchMemoryBlock(h_process, memory_addr, arr_lp_number, res, info):
     if info.Type != 16777216 and info.Type != 262144 and info.Type != 16 and info.Type != 1 and info.Type != 128:
@@ -130,6 +203,15 @@ def searchMemoryBlock(h_process, memory_addr, arr_lp_number, res, info):
                 indices, = np.where(my_buffer == lp_number)  # fast bulk search
                 if len(indices):
                     for i in indices:
+
+                        if lp_number == 10020:
+                            int0 = my_buffer[i]
+                            int_1 = my_buffer[i - 1]
+                            int_2 = my_buffer[i - 2]
+                            int8 = my_buffer[i + 8]
+                            if int0 == 10020 and int_1 == 15 and int_2 == 4 and int8 == 1:
+                                # print("找到了, 10020的地址是" + hex(memory_addr + i * 4))
+                                res[1].append(memory_addr + i * 4)
                         addr_temp = memory_addr + i * 4
                         # print hex(addr_temp)
                         res[lp_number].append(addr_temp)

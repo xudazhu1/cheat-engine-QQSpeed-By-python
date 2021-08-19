@@ -1,25 +1,45 @@
-# 将python3项目编译为pyc文件
-# python环境中
+import os
 
-# 单文件
-import py_compile
+import requests
 
-# py_compile.compile(r'D:\Project.py') # 绝对路径
+import MyTread
 
-# 多文件
-import compileall
 
-# 绝对路径
-compileall.compile_dir(r'D:\project\my-python32\src')
+def downCar(code):
+    try:
+        url = 'http://iips.speed.qq.com/images/' + str(code) + '.png'
+        r = requests.get(url)
 
-# 运行主程序发现pyc文件 导包错误
-# 解决方法
-# 1. 将所有__pycache__目录的pyc文件全部粘贴到当前目录
-# 2. 将所有pyc文件后缀改为与目录中的pyc文件相同名字 如: test.cpython-37.pyc  -->> test.pyc
-# 3. 将所有py文件删除
+        dirs = "D:\\hack\\cars\\" + str(int(code/2000))
+        if not os.path.exists(dirs):
+            print('初始化创建文件夹')
+            os.mkdir(dirs)
 
-#运行主程序
+        with open(dirs + "\\" + str(code) + ".png", "wb") as code:
+            code.write(r.content)
+        print("下载物品 ==> " + str(code))
+    except:
+        print("下载物品错误" + str(code))
 
-# pyc文件反编译
-# pip install uncompyle6
-# uncompyle6.exe test.pyc
+
+def threadDown(start, end):
+    global endG
+    if end > endG:
+        end = endG
+    while start <= end:
+        downCar(start)
+        start += 1
+
+
+threads = []
+startG = 115450
+endG = 116500
+step = 100
+index = startG
+while index < endG:
+    threads.append(MyTread.threadByFuture(threadDown,
+                                          index, index + step))
+    index += step
+
+for t in threads:
+    t.result()

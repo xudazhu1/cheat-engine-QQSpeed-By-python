@@ -14,30 +14,49 @@ class Instance4ChangeBox:
             "x": 1,
             "y": 1,
             "width": 10,
-            "readonly": False
+            "readonly": False,
+            "skin": False
         }
         _cnfmerge(configTemp, self.config)
         Tk.Label(root, text="原车ID").place(x=self.config.get("x"), y=self.config.get("y"))
         self.originIdBox = InputBox(root, {"x": self.config.get("x") + 50, "y": self.config.get("y"), "width": 25,
                                            "readonly": self.config.get("readonly")})
-        Tk.Label(root, text="  ==> ").place(x=self.config.get("x") + 230, y=self.config.get("y"))
-        Tk.Label(root, text="目标车ID").place(x=self.config.get("x") + 270, y=self.config.get("y"))
-        self.targetIdBox = InputBox(root, {"x": self.config.get("x") + 330, "y": self.config.get("y"), "width": 25,
-                                           "readonly": self.config.get("readonly")})
+        if not self.config.get("skin"):
+            Tk.Label(root, text="  ==> ").place(x=self.config.get("x") + 230, y=self.config.get("y"))
+            Tk.Label(root, text="目标车ID").place(x=self.config.get("x") + 270, y=self.config.get("y"))
+            self.targetIdBox = InputBox(root, {"x": self.config.get("x") + 330, "y": self.config.get("y"), "width": 25,
+                                               "readonly": self.config.get("readonly")})
         if not self.config.get("readonly"):
             selector4Input(root, self.originIdBox)
-            selector4Input(root, self.targetIdBox)
+            if not self.config.get("skin"):
+                selector4Input(root, self.targetIdBox)
 
     # 获取原车Id 以及目标车id
     def getValues(self):
         originId = self.originIdBox.valBox.get()
-        targetId = self.targetIdBox.valBox.get()
+        targetId = 0
+        if not self.config.get("skin"):
+            targetId = self.targetIdBox.valBox.get()
         return {"originId": originId, "targetId": targetId}
 
     # 设置原车Id 以及目标车id
     def setValues(self, conf):
         self.originIdBox.valBox.set(conf.get("originId") if conf.__contains__("originId") else "")
-        self.targetIdBox.valBox.set(conf.get("targetId") if conf.__contains__("targetId") else "")
+        if not self.config.get("skin"):
+            targetId = self.targetIdBox.valBox.get()
+            self.targetIdBox.valBox.set(conf.get("targetId") if conf.__contains__("targetId") else "")
+
+    # 设置原车Id 以及目标车id
+    def show(self):
+        self.originIdBox.show()
+        if not self.config.get("skin"):
+            self.targetIdBox.show()
+
+    # 设置原车Id 以及目标车id
+    def hide(self):
+        self.originIdBox.hide()
+        if not self.config.get("skin"):
+            self.targetIdBox.hide()
 
 
 class InputBox:
@@ -55,6 +74,12 @@ class InputBox:
         self.entry.place(x=self.config.get("x") or 1, y=self.config.get("y") or 1)
         # root.mainloop()
         # sv2.trace("w", lambda name, index, : no_thing())
+
+    def hide(self):
+        self.entry.place_forget()
+
+    def show(self):
+        self.entry.place(x=self.config.get("x") or 1, y=self.config.get("y") or 1)
 
 
 # 为某个输入框绑定代码搜索框
@@ -97,7 +122,7 @@ class selector4Input:
 
     def _on_click(self, event):
         str_widget = str(event.widget)
-        if str_widget != str(self.inputBox.entry) and str_widget != str(self.listbox)\
+        if str_widget != str(self.inputBox.entry) and str_widget != str(self.listbox) \
                 and str_widget != str(self.y_scrollbar):
             self.hide_picker()
         else:

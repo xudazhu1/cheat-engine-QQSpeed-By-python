@@ -5,6 +5,8 @@ import win32service
 import os
 import sys
 
+from numpy import unicode
+
 ERROR_SERVICE_EXISTS = 1073
 ERROR_IO_PENDING = 997
 ERROR_SERVICE_ALREADY_RUNNING = 1056
@@ -23,11 +25,11 @@ def resource_path(relative_path):
         base_path = sys._MEIPASS
         # messages.append("base_path", base_path)
     else:
-        return "D:\project\my-python32\dll\FileDriver.sys"
+        return "D:/project/my-python32/dll/" + relative_path
     return os.path.join(base_path, relative_path)
 
 
-path = resource_path("FileDriver.sys")
+path = resource_path("Change.sys")
 # path = "FileDriver.sys"
 # messages.append(path)
 # path = "./dll/FileDriver.sys"
@@ -55,16 +57,17 @@ def installDriver():
             dwRtn = win32api.GetLastError()
             if dwRtn != ERROR_IO_PENDING and dwRtn != ERROR_SERVICE_EXISTS:
                 # 由于其他原因创建服务失败
-                messages.append("CrateService() Fail %d ! " + str(dwRtn))
+                messages.append("CreateService(58) Fail %d ! " + str(dwRtn))
 
             # 驱动程序已经加载，只需要打开
             hs = OpenService(hServiceMgr, driverName)
             if hs is None:
                 # 如果打开服务也失败，则意味错误
-                win32api.GetLastError()
+                e = win32api.GetLastError()
+                messages.append("OpenService(65) Fail %d ! " + str(e.args[0]) + " " + str(e.args[1]))
                 return False
         else:
-            messages.append("CrateService() ok ! ")
+            messages.append("CrateService(68) ok ! ")
 
         # 开启此项服务
         bRet = StartService(hs)
@@ -152,8 +155,9 @@ def CreateService(hServiceMgr, driverNameInner, pathInner):
         messages.append("CreateService ok " + str(hs))
         return hs
     except Exception as e:
-        messages.append(str(e.args[0]) + " " + str(e.args[1]))
-        messages.append(unicode(eval(repr(e.args[2])), "gbk"))
+        if e.args[0] != 1073:
+            messages.append(str(e.args[0]) + " " + str(e.args[1]))
+            messages.append(unicode(eval(repr(e.args[2])), "gbk"))
     return None
 
 
@@ -196,8 +200,9 @@ def ControlService(hs, status):
         messages.append("ControlService ok " + str(res))
         return res
     except Exception as e:
-        messages.append(str(e.args[0]) + " " + str(e.args[1]))
-        messages.append(unicode(eval(repr(e.args[2])), "gbk"))
+        if e.args[0] != 1062:
+            messages.append(str(e.args[0]) + " " + str(e.args[1]))
+            messages.append(unicode(eval(repr(e.args[2])), "gbk"))
     return None
 
 
@@ -207,6 +212,9 @@ def DeleteService(hs):
         messages.append("DeleteService ok " + str(res))
         return True
     except Exception as e:
+        if e.args[0] == 1072:
+            return True
         messages.append(str(e.args[0]) + " " + str(e.args[1]))
         messages.append(unicode(eval(repr(e.args[2])), "gbk"))
+        messages.append("DeleteService Field 213 " + str(e.args[0]) + " " + str(e.args[1]))
     return None

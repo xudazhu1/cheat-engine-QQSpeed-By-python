@@ -7,7 +7,7 @@ import threading
 from concurrent import futures
 
 
-pool = futures.ThreadPoolExecutor(max_workers=8)
+pool = futures.ThreadPoolExecutor(max_workers=128)
 
 
 def thread_it(func, *args):
