@@ -1,7 +1,9 @@
 # cheat-engine-QQSpeed-By-python  
 cheat engine QQSpeed By python  
 
-#### Main  test_python.py  
+#### 主进程  src/Main.py  
+#### 入口 start.py
+#### 加壳后入口 startO.py
 ### to exe Script  
 ```
 # 1. 加密
