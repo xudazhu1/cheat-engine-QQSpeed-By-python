@@ -4,7 +4,14 @@ cheat engine QQSpeed By python
 #### Main  test_python.py  
 ### to exe Script  
 ```
-pyinstaller -F -p ../../src --add-data=../../dll/FileDriver.sys;. --uac-admin -r ../../test_python.exe.manifest,1 ../../test_python.py  
+# 1. 加密
+python setup.py build_ext --inplace
+# 2. 加密打包
+pyinstaller -F -w -p ./build --add-data=./dll/ChangeQS.dll;. --add-data=./dll/cars1.json;. ^
+--uac-admin -r ./test_python.exe.manifest,1 ./start.py
+# 3. 加壳打包
+pyinstaller -F -w -p ./build --add-data=D:/project/my-python32/dist/start.exe;. ^
+--uac-admin -r ./test_python.exe.manifest,1 ./startO.py
 ```
 ~~use python 2.7 win32 pyinstaller 3.6~~ python3.7 win64
 
