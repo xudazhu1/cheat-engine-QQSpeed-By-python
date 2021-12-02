@@ -1,0 +1,12 @@
+future~=0.18.2
+pyperclip~=1.8.2
+requests~=2.20.0
+mttkinter~=0.6.1
+Pillow~=8.4.0
+pypiwin32~=223
+pywin32~=301
+psutil~=5.8.0
+PyQt5~=5.15.6
+numpy~=1.21.1
+Cython~=0.29.24
+setuptools~=57.4.0

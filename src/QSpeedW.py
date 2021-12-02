@@ -1,14 +1,15 @@
 # coding=utf-8
-import sys
-import time
 import os
+import time
+import tkinter
+
 import win32api
 import win32com
 import win32con
+# noinspection PyPackageRequirements
 import win32gui
 
 import Window
-import tkinter
 
 
 def get_game_name(h_wnd):
@@ -49,6 +50,7 @@ def get_window4speed():
     return Window.find_window("GAMEAPP")
 
 
+# noinspection PyShadowingNames
 def show_speed_window(my_tk):
     h_wnd_list = get_window4speed()
     index = -1
@@ -58,9 +60,9 @@ def show_speed_window(my_tk):
         index = index + 1
         # 中文系统默认title是gb2312的编码
 
-        title = win32gui.GetWindowText(hWnd)
+        # title = win32gui.GetWindowText(hWnd)
         # title = gbk2utf8(title)
-        clsname = win32gui.GetClassName(hWnd)
+        # clsname = win32gui.GetClassName(hWnd)
 
         # print ( "窗口句柄:%s " % (hWnd) )
         # print ('编号: ' + str(index) +  '   :%s' % (title) )
@@ -98,7 +100,7 @@ def login_window(filename, user_name: str, password: str):
     win32gui.SetForegroundWindow(parent)
 
     # 记录现在所有game app窗口
-    windows = get_window4speed()
+    # windows = get_window4speed()
 
     edits = Window.get_child_windows(parent, "Edit")
     print(edits)

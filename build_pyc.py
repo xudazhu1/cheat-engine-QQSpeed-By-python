@@ -32,9 +32,9 @@ def threadDown(start, end):
 
 
 threads = []
-startG = 115450
-endG = 116500
-step = 100
+startG = 118550
+endG = 121650
+step = 300
 index = startG
 while index < endG:
     threads.append(MyTread.threadByFuture(threadDown,

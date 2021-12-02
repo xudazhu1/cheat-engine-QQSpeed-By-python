@@ -1,6 +1,7 @@
 # coding=utf-8
 import win32api
 import win32con
+# noinspection PyPackageRequirements
 import win32gui
 import psutil
 import time
@@ -147,6 +148,7 @@ def show_window(window):
     win32gui.ShowWindow(window, win32con.SW_SHOW)  # 设置显示
 
 
+# noinspection PyShadowingNames
 def get_child_windows(parent, class_name):
     # '''
     # 获得parent的所有子窗口句柄
@@ -166,6 +168,7 @@ def get_child_windows(parent, class_name):
     return new_list
 
 
+# noinspection PyShadowingNames
 def get_child_windows_by_class_and_name(parent, class_name, window_name):
     # '''
     # 获得parent的所有子窗口句柄
@@ -236,4 +239,3 @@ def getTargetPath4Lnk(lnkPath):
     shell = win32com.client.Dispatch("WScript.Shell")
     shortcut = shell.CreateShortCut(lnkPath)
     return shortcut.Targetpath
-

@@ -19,6 +19,14 @@ import webbrowser
 
 import VersionControl
 from ChangeUtils import ChangeCar
+import QunVer
+
+root = MyTK.create_window("ChangeQS_2.11.28 by easy", "590x450")
+# 群验证
+QunVer.run(root)
+# if Qverify.verifyStatus ^ 70127613 != 70126836:
+#     tkinter.messagebox.showinfo('群验证! ', '验证失败! ')
+#     sys.exit(0)
 
 
 # 通过窗口句柄获取pid
@@ -92,6 +100,11 @@ def changeAddr():
         skinValue = int(changeBox3Values.get("originId").split("--")[0])
     changeModel.target_id = int(changeBox2Values.get("targetId").split("--")[0])
     if changeBox2Values.get("originId") and changeBox2Values.get("targetId"):
+
+        if int(changeBox2Values.get("originId").split("--")[0]) == 10020 \
+                or int(changeBox2Values.get("originId").split("--")[0]) == 10020:
+            tkinter.messagebox.showinfo('不支持的操作', '不支持使用新手赛车改车')
+            return False
         # 保存改车数据
         defaultValues["changeModelSkin"] = changeModelSkin.get()
         mergeObj(changeBox2Values, defaultValues)
@@ -173,14 +186,13 @@ if len(window_temp) > 0:
     handle = window_temp[0]
 # 改车模块对象 传入QQ飞车窗口句柄
 changeModel = ChangeCar(handle)
-# threads.append(MyTread.thread_it(Window.for_kill_by_name, "HACK.DLL"))
 
 # 打包exe脚本 pip install pyinstaller==3.1(划掉)
 # pyinstaller -F -p ../../src --add-data=../../dll/kill-tp.dll;. --uac-admin -r ../../test_python.exe.manifest,1 ../../test_python.py
 # pyinstaller -F -p ../../src --add-data=../../dll/kill-tp.dll;. --uac-admin  ../../test_python.py
-# pyinstaller -F -w -p ../../src --add-data=../../dll/Change.sys;. --add-data=../../dll/cars1.json;. --uac-admin -r ../../test_python.exe.manifest,1 ../../test_python.py
+# pyinstaller -F -w -p ../../src --add-data=../../dll/ChangeQS.sys;. --add-data=../../dll/cars1.json;. --uac-admin -r ../../test_python.exe.manifest,1 ../../test_python.py
 
-root = MyTK.create_window("改车2.9.X 测试版 by easy", "590x450")
+
 # 初始化飞车窗口按钮
 # 仨修改组件
 MyTK.text(root, "板车: ", 5, 70)
@@ -224,10 +236,10 @@ def openUrl():
 changeModelSkin = Tk.IntVar()
 changeModelSkin.set(defaultValues.get("changeModelSkin"))
 MyTK.text(root, " 你装备的车俩类型是", 80, y=1 + 20)
-Tk.Radiobutton(root, command=lambda: changeModelSkinValue(1), variable=changeModelSkin, text='常规', value=1).place(x=200,
-                                                                                                                  y=1 + 20)
-Tk.Radiobutton(root, command=lambda: changeModelSkinValue(2), variable=changeModelSkin, text='皮肤', value=2).place(x=260,
-                                                                                                                  y=1 + 20)
+Tk.Radiobutton(root, command=lambda: changeModelSkinValue(1), variable=changeModelSkin, text='常规', value=1) \
+    .place(x=200, y=1 + 20)
+Tk.Radiobutton(root, command=lambda: changeModelSkinValue(2), variable=changeModelSkin, text='皮肤', value=2) \
+    .place(x=260, y=1 + 20)
 # Tk.Radiobutton(root, variable=changeModelV, text='模式3', value=3).place(x=320, y=1 + 20)
 
 Tk.Button(root, command=lambda: openUrl(), text=' 查看B站视频教程 ').place(x=475, y=1 + 20)
@@ -277,7 +289,7 @@ Tk.Button(root, command=lambda: checked(113413), text='S青龙偃月刀-关羽')
 
 Tk.Button(root, command=lambda: checked(115168), text='[帅]奔雷圣卫').place(x=181 - 110, y=180 + 121)
 Tk.Button(root, command=lambda: checked(89936), text='终极烈焰新星').place(x=281 - 110, y=180 + 121)
-Tk.Button(root, command=lambda: checked(70047), text='终极麦凯伦').place(x=381 - 110, y=180 + 121)
+Tk.Button(root, command=lambda: checked(115160), text='[S]至曜-玄武').place(x=381 - 110, y=180 + 121)
 Tk.Button(root, command=lambda: checked(110709), text='爆天甲-朋克').place(x=481 - 110, y=180 + 121)
 Tk.Button(root, command=lambda: checked(110711), text='众神之神-麒麟').place(x=581 - 110, y=180 + 121)
 
@@ -289,5 +301,4 @@ Tk.Button(root, command=lambda: checked(106675), text='终极众神之神').plac
 
 # 为关闭窗口按钮绑定结束程序事件
 root.protocol("WM_DELETE_WINDOW", on_closing)
-
-root.mainloop()
+tkinter.mainloop()

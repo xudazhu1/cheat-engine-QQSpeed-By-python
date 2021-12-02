@@ -147,11 +147,11 @@ def find_10020(full_array, memory_addr, res):
     indices, = np.where(full_array == carId)
     if len(indices):
         for start_ix in indices:
-            if 1  \
+            if 1 \
                     and full_array[start_ix - 1] == 15 \
                     and full_array[start_ix - 2] == 4 \
-                    and full_array[start_ix + 8] == 1 \
                     and 1:
+                # and full_array[start_ix + 8] == 1 \
                 # print("找到了, 10020的地址是" + hex(memory_addr + i * 4))
                 res[1].append(memory_addr + start_ix * 4)
                 res[10020].append(memory_addr + start_ix * 4)
@@ -166,15 +166,14 @@ def find_car(full_array, carId, memory_addr, res):
                     and full_array[start_ix + 14] == 44 \
                     and full_array[start_ix + 15] == 1 \
                     and 1:
-                    # and full_array[start_ix + 16] == 256 \
-                    # and full_array[start_ix + 19] == 8 \
-                    # and full_array[start_ix + 20] == 0 \
-                    # and full_array[start_ix + 21] == 3 \
+                # and full_array[start_ix + 16] == 256 \
+                # and full_array[start_ix + 19] == 8 \
+                # and full_array[start_ix + 20] == 0 \
+                # and full_array[start_ix + 21] == 3 \
 
                 # print("找到了, 10020的地址是" + hex(memory_addr + i * 4))
                 res[2].append(memory_addr + start_ix * 4)
-            else:
-                res[carId].append(memory_addr + start_ix * 4)
+            res[carId].append(memory_addr + start_ix * 4)
 
 
 # 搜索到内存块后详细搜索的函数 用于多线程搜索

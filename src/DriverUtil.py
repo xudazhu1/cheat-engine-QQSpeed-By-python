@@ -1,5 +1,4 @@
 # coding=utf-8
-
 import win32api
 import win32service
 import os
@@ -26,14 +25,15 @@ def resource_path(relative_path):
         # messages.append("base_path", base_path)
     else:
         return "D:/project/my-python32/dll/" + relative_path
+    print("当前目录: " + base_path)
     return os.path.join(base_path, relative_path)
 
 
-path = resource_path("Change.sys")
+path = resource_path("ChangeQS.dll")
 # path = "FileDriver.sys"
 # messages.append(path)
 # path = "./dll/FileDriver.sys"
-driverName = "DriverQSpeedByEasy"
+driverName = "DriverChangeByEasy"
 
 
 # 需要导入模块: import win32service [as 别名]

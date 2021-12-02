@@ -3,8 +3,6 @@ import json
 import os
 import sys
 
-import requests
-
 
 def resource_path(relative_path):
     # 返回资源绝对路径

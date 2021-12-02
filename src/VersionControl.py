@@ -3,17 +3,18 @@ import sys
 import time
 import tkinter.messagebox
 
+# need to use  requests 2.20
 import requests
 
-myVersion = 383
+myVersion = 21128
 header = {"Cache-Control": "no-cache"}
 
 # 帮助网址
-vReq2 = requests.get("https://qjrgj.com/ChangeQSpeendHelp.txt", timeout=1, headers=header)
+vReq2 = requests.get("https://qjrgj.com/ChangeQSpeendHelp.txt", timeout=1, headers=header, verify=False)
 helpUrl = vReq2.text
 
 # 检测版本
-vReq = requests.get("https://qjrgj.com/ChangeQSpeendVersion.txt", timeout=1, headers=header)
+vReq = requests.get("https://qjrgj.com/ChangeQSpeendVersion.txt", timeout=1, headers=header, verify=False)
 vIntValue = int(vReq.text)
 if vIntValue > myVersion:
     print("程序不是最新版本, 即将退出...")

@@ -22,7 +22,3 @@ low = {'backspace': 8, 'tab': 9, 'clear': 12, 'enter': 13, 'shift': 16, 'ctrl': 
        'start_application_1': 182, 'start_application_2': 183, 'attn_key': 246, 'crsel_key': 247, 'exsel_key': 248,
        'play_key': 250, 'zoom_key': 251, 'clear_key': 254, '+': 187, ',': 188, '-': 189, '.': 190, '/': 191, ';': 186,
        '[': 219, '\\': 220, ']': 221, "'": 222, '`': 192}
-
-
-
-

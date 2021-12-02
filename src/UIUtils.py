@@ -1,4 +1,4 @@
-import tkinter as Tk
+import tkinter
 
 import CarMap as carMap
 
@@ -18,12 +18,12 @@ class Instance4ChangeBox:
             "skin": False
         }
         _cnfmerge(configTemp, self.config)
-        Tk.Label(root, text="原车ID").place(x=self.config.get("x"), y=self.config.get("y"))
+        tkinter.Label(root, text="原车ID").place(x=self.config.get("x"), y=self.config.get("y"))
         self.originIdBox = InputBox(root, {"x": self.config.get("x") + 50, "y": self.config.get("y"), "width": 25,
                                            "readonly": self.config.get("readonly")})
         if not self.config.get("skin"):
-            Tk.Label(root, text="  ==> ").place(x=self.config.get("x") + 230, y=self.config.get("y"))
-            Tk.Label(root, text="目标车ID").place(x=self.config.get("x") + 270, y=self.config.get("y"))
+            tkinter.Label(root, text="  ==> ").place(x=self.config.get("x") + 230, y=self.config.get("y"))
+            tkinter.Label(root, text="目标车ID").place(x=self.config.get("x") + 270, y=self.config.get("y"))
             self.targetIdBox = InputBox(root, {"x": self.config.get("x") + 330, "y": self.config.get("y"), "width": 25,
                                                "readonly": self.config.get("readonly")})
         if not self.config.get("readonly"):
@@ -43,7 +43,7 @@ class Instance4ChangeBox:
     def setValues(self, conf):
         self.originIdBox.valBox.set(conf.get("originId") if conf.__contains__("originId") else "")
         if not self.config.get("skin"):
-            targetId = self.targetIdBox.valBox.get()
+            # targetId = self.targetIdBox.valBox.get()
             self.targetIdBox.valBox.set(conf.get("targetId") if conf.__contains__("targetId") else "")
 
     # 设置原车Id 以及目标车id
@@ -68,9 +68,9 @@ class InputBox:
             "readonly": False
         }
         _cnfmerge(configTemp, self.config)
-        self.valBox = Tk.StringVar()
-        self.entry = Tk.Entry(root, bd=6, width=self.config.get("width") or 10, textvariable=self.valBox,
-                              state="readonly" if self.config.get("readonly") else "normal")
+        self.valBox = tkinter.StringVar()
+        self.entry = tkinter.Entry(root, bd=6, width=self.config.get("width") or 10, textvariable=self.valBox,
+                                   state="readonly" if self.config.get("readonly") else "normal")
         self.entry.place(x=self.config.get("x") or 1, y=self.config.get("y") or 1)
         # root.mainloop()
         # sv2.trace("w", lambda name, index, : no_thing())
@@ -95,7 +95,7 @@ class selector4Input:
         # entry.place(x=1, y=60)
         self.inputBox.entry.bind('<KeyRelease>', self.on_keyrelease)
 
-        self.listbox = Tk.Listbox(root)
+        self.listbox = tkinter.Listbox(root)
         # listbox.place(x=inputBox.config.get("x"), y=inputBox.config.get("y") + 30)
         # listbox.place_forget()
         # listbox.bind('<Double-Button-1>', on_select)
@@ -103,7 +103,7 @@ class selector4Input:
         self.listbox_update(self.test_list)
 
         # 创建Scrollbar
-        self.y_scrollbar = Tk.Scrollbar(self.listbox, command=self.listbox.yview)
+        self.y_scrollbar = tkinter.Scrollbar(self.listbox, command=self.listbox.yview)
         self.y_scrollbar.place(x=self.inputBox.config.get("width") * 7.5 - 20, y=1, height=180)
         # y_scrollbar.pack(side=Tk.RIGHT, fill=Tk.Y)
         self.listbox.config(yscrollcommand=self.y_scrollbar.set)
@@ -172,5 +172,5 @@ class selector4Input:
         try:
             selected = event.widget.get(event.widget.curselection())
             self.checked(selected)
-        except Tk.TclError:
+        except tkinter.TclError:
             print("")

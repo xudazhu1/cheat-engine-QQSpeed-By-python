@@ -124,7 +124,8 @@ class ChangeCar:
                 else:
                     # 把首次改的全部恢复
                     if not self.reduction:
-                        MemoryUtils.write_memory_batch(h_process, self.scanCache[original], original)
+                        MemoryUtils.write_memory_batch(h_process, self.scanCache[original], 998)
+                        # MemoryUtils.write_memory_batch(h_process, self.scanCache[original], original)
                         # if skinValue != 0:
                         #     MemoryUtils.write_memory_batch(h_process, self.scanCache[skinValue], skinValue)
                         self.reduction = True
