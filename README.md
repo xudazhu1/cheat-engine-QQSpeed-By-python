@@ -1,10 +1,19 @@
 # cheat-engine-QQSpeed-By-python  
 cheat engine QQSpeed By python  
 
-#### Main  test_python.py  
+#### 主进程  src/Main.py  
+#### 入口 start.py
+#### 加壳后入口 startO.py
 ### to exe Script  
 ```
-pyinstaller -F -p ../../src --add-data=../../dll/FileDriver.sys;. --uac-admin -r ../../test_python.exe.manifest,1 ../../test_python.py  
+# 1. 加密
+python setup.py build_ext --inplace
+# 2. 加密打包
+pyinstaller -F -w -p ./build --add-data=./dll/ChangeQS.dll;. --add-data=./dll/cars1.json;. ^
+--uac-admin -r ./test_python.exe.manifest,1 ./start.py
+# 3. 加壳打包
+pyinstaller -F -w -p ./build --add-data=D:/project/my-python32/dist/start.exe;. ^
+--uac-admin -r ./test_python.exe.manifest,1 ./startO.py
 ```
 ~~use python 2.7 win32 pyinstaller 3.6~~ python3.7 win64
 
@@ -29,5 +38,9 @@ pyinstaller -F -p ../../src --add-data=../../dll/FileDriver.sys;. --uac-admin -r
 : 优化10020精准命中 以减少崩溃情况的发生
 ##### QQ飞车改车2.9.x 更新日志:
 : 优化普通赛车代码精准命中 大大减少崩溃情况的发生
+##### QQ飞车改车2.12.1 更新日志:
+: 增加群验证 QQ扫码验证是否在群里
+: pyd编译加密 防止反编译
+: 加壳让每次运行的md5不一致, 防止大片封号
 
 
