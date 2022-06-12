@@ -8,6 +8,39 @@ if not os.path.exists(local_user_path):
     os.mkdir(local_user_path)
 
 
+def getProGramPath():
+    return local_user_path
+
+
+def write_file_on_this(jsonTemp, fileName):
+    # 写入数据 没有则为空 为空时新建文件
+    if not os.path.exists(local_user_path + '\\' + fileName):
+        file = open(local_user_path + '\\' + fileName, 'w')
+        file.close()
+
+    file = open(local_user_path + '\\' + fileName, 'w')
+    print('写入=>' + str(jsonTemp))
+    # file.writelines(qq_data_lines)
+    # file.write(strTemp)
+    json.dump(jsonTemp, file)
+    file.close()
+    # read_ids()
+
+
+def read_file_on_this(fileName):
+    data = {}
+    # 读取本地QQ&密码 没有则为空
+    if not os.path.exists(local_user_path + '\\' + fileName):
+        file = open(local_user_path + '\\' + fileName, 'w')
+        json.dump(data, file)
+        file.close()
+    with open(local_user_path + '\\' + fileName, "r") as f:
+        data = json.load(f)
+        print('读取到: ' + str(data))
+        f.close()
+    return data
+
+
 def write_file(strTemp, fileName):
     file = open(fileName, 'w')
     print('写入=>' + str(strTemp))

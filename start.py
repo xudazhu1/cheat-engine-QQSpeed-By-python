@@ -78,5 +78,13 @@ import re
 import sys
 import JsonUtils
 
+import Register
+import base64
+import des as des
+import wmi as wmi
+
+import FullDisplayMod
+import pynput
+
 
 Main.Start()

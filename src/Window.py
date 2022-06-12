@@ -57,6 +57,44 @@ def get_window_size(hWnd):
     return [right - left, bottom - top]
 
 
+# 默认
+DEFAULT_DM = win32api.EnumDisplaySettings(None, win32con.ENUM_CURRENT_SETTINGS)
+DEFAULT_SIZE = [DEFAULT_DM.PelsWidth, DEFAULT_DM.PelsHeight]
+
+
+# 默认屏幕分辨率
+def default_resolving():
+    win32api.ChangeDisplaySettings(DEFAULT_DM, 0)
+
+
+# 设置屏幕分辨率
+def set_resolving(screenSize):
+    # 获取当前设定
+    dm = win32api.EnumDisplaySettings(None, win32con.ENUM_CURRENT_SETTINGS)
+    # # 储存当前宽高
+    # oldSize = [dm.PelsWidth, dm.PelsHeight]
+    # 修改成新的宽高
+    # dm.PelsWidth = 1280
+    # dm.PelsHeight = 1024
+    # 色深
+    # dm.BitsPerPel = 32
+    # dm.DisplayFixedOutput = 0
+    # 刷新率
+    # dm.DisplayFrequency = 120
+    dm.PelsWidth = screenSize[0]
+    dm.PelsHeight = screenSize[1]
+    # 设置
+    win32api.ChangeDisplaySettings(dm, 0)
+
+
+# 获取屏幕分辨率
+def get_resolving():
+    # 获取当前设定
+    dm = win32api.EnumDisplaySettings(None, win32con.ENUM_CURRENT_SETTINGS)
+    # # 储存当前宽高
+    return [dm.PelsWidth, dm.PelsHeight]
+
+
 # 获取窗口边框偏移
 def get_padding_size(window):
     left, top, right, bottom = win32gui.GetClientRect(window)

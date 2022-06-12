@@ -1,17 +1,25 @@
-import os
-
 # 写
-import random
-import shutil
-import time
+# import Register
+#
+# deviceId = Register.register().getCombinNumber()
+# print(deviceId)
+# print(222)
 
-r = random.random() * 100000000000000.00 * random.random()
-shutil.copy(r'D:\project\my-python32\dist\start.exe', r'D:\project\my-python32\dist\start' + str(r) + r'.exe')
-file = open(r'D:\project\my-python32\dist\start' + str(r) + r'.exe', 'ab')
-# 2e59b6e508a0ccb05cdb891bba27b129
-# d8f3e8f038ccb1e3be3ce14f337e6189
+import win32api
+import win32con
 
-# index = 1
-# while index < random.randint(500, 2000):
-file.write(bytes(str(r), encoding='utf8'))
-file.close()
+#获取当前设定
+dm = win32api.EnumDisplaySettings(None, win32con.ENUM_CURRENT_SETTINGS)
+# 储存当前宽高
+oldWidth = dm.PelsWidth
+oldHeight = dm.PelsHeight
+# 修改成新的宽高
+dm.PelsWidth = 1280
+dm.PelsHeight = 1024
+# 色深
+# dm.BitsPerPel = 32
+# dm.DisplayFixedOutput = 0
+# 刷新率
+# dm.DisplayFrequency = 120
+# 设置
+win32api.ChangeDisplaySettings(dm, 0)

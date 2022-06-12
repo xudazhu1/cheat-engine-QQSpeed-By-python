@@ -32,8 +32,8 @@ def threadDown(start, end):
 
 
 threads = []
-startG = 118550
-endG = 121650
+startG = 116000
+endG = 120750
 step = 300
 index = startG
 while index < endG:

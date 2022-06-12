@@ -36,8 +36,10 @@ def resource_path():
 
 def run():
     path = resource_path()
+    # path = path.replace("\\\\", "/")
     # MyTread.thread_it_disDaemon(run)
-    os.system('start "" /d ' + os.path.dirname(path) + " " + path)
+    command = 'start \"\" /d \"' + os.path.dirname(path) + '\" \"' + path + "\""
+    os.system(command)
     # win32api.ShellExecute(0, 'open', path, '', '', 1)
     # sys.exit(1)
     pid = os.getpid()

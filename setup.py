@@ -23,6 +23,8 @@ setup(
          "src/UIUtils.py",
          "src/VersionControl.py",
          "src/Window.py",
+         "src/Register.py",
+         "src/FullDisplayMod.py",
          ]
         , build_dir="D:/project/my-python32/venv/Scripts/build/cython"
     ),  # add.py 为需要打包的文件名，不能包含中文

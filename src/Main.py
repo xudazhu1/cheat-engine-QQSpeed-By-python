@@ -22,6 +22,13 @@ import webbrowser
 import VersionControl
 from ChangeUtils import ChangeCar
 import QunVer
+import FullDisplayMod
+import CarMap
+
+# 监听F9
+MyTread.thread_it(FullDisplayMod.listen_f9)
+# 获取车辆
+CarMap.get_car()
 
 
 # 通过窗口句柄获取pid
@@ -77,6 +84,7 @@ def gai(values):
         values.changeModel = ChangeCar(values.handle)
         return
     tkinter.messagebox.showinfo('其实我也不知道会不会失败', '成功,进出商城试试吧')
+    CarMap.click_car(values.changeModel.target_id)
 
 
 def changeAddr(values):
@@ -93,6 +101,7 @@ def changeAddr(values):
     values.changeBox1.targetIdBox.valBox.set(changeBox2Values.get("targetId"))
     # 把改车对象的目标id 改为 10020 的 original_id
     skinValue = 0
+    # 如果是皮肤模式
     if values.changeModelSkin.get() == 2 and len(changeBox3Values.get("originId")) > 0:
         skinValue = int(changeBox3Values.get("originId").split("--")[0])
     values.changeModel.target_id = int(changeBox2Values.get("targetId").split("--")[0])
@@ -191,9 +200,19 @@ def checked(idTemp, values):
 
 class Start:
     def __init__(self):
-        title = ["Cha", "nge", "QS_", "2.11", ".28 ", "by ", "easy"]
+        title = ["Cha", "nge", "QS_", "3.06", ".11 ", "by ", "easy"]
         random.shuffle(title)
-        self.root = TkUtils.create_window(''.join(title), "590x450")
+        self.root = TkUtils.create_window(''.join(title), "640x450")
+
+        # # ------
+        # # 调用api设置成由应用程序缩放
+        # ctypes.windll.shcore.SetProcessDpiAwareness(1)
+        # # 调用api获得当前的缩放因子
+        # ScaleFactor = ctypes.windll.shcore.GetScaleFactorForDevice(0)
+        # # 设置缩放因子
+        # # self.root.tk.call('tk', 'scaling', 1.40)
+        # self.root.tk.call('tk', 'scaling', ScaleFactor / 80)
+
         # 群验证
         QunVer.run(self.root)
         self.loaded = False
@@ -251,11 +270,13 @@ class Start:
         TkUtils.text(self.root, "tips: 改完进退商城见效", 300, 360)
         TkUtils.text(self.root, "tips: 输入框打字可搜索 ", 10, 380)
         TkUtils.text(self.root, "tips: 崩溃是常规操作, 莫慌, 重开游戏再改", 300, 380)
-        TkUtils.text(self.root, "tips: 不懂可点右上角查看教程 ", 10, 400)
+        TkUtils.text(self.root, "tips: F9可快速进入全屏宽屏模式(新功能)", 10, 400)
         TkUtils.text(self.root, "tips: 新版本应该不怎么崩溃了 敬请体验", 300, 400)
 
+        TkUtils.text(self.root, "tips: F9可快速进入全屏宽屏(1280x1024)模式(新功能)", 10, 300)
+
         # 常用代码
-        tkinter.Label(self.root, text="常用代码").place(x=1, y=180)
+        tkinter.Label(self.root, text="大家常用代码").place(x=1, y=180)
 
         tkinter.Button(self.root, command=lambda: checked(74362, self), text='爆天甲').place(x=181 - 110, y=60 + 121)
         tkinter.Button(self.root, command=lambda: checked(88865, self), text='终极爆天甲').place(x=281 - 110, y=60 + 121)
@@ -263,38 +284,54 @@ class Start:
         tkinter.Button(self.root, command=lambda: checked(106674, self), text='至尊·爆天甲').place(x=481 - 110, y=60 + 121)
         tkinter.Button(self.root, command=lambda: checked(115166, self), text='爆天雪').place(x=581 - 110, y=60 + 121)
 
-        tkinter.Button(self.root, command=lambda: checked(106676, self), text='至尊·盘龙').place(x=181 - 110, y=90 + 121)
-        tkinter.Button(self.root, command=lambda: checked(106674, self), text='至尊·爆天甲').place(x=281 - 110, y=90 + 121)
-        tkinter.Button(self.root, command=lambda: checked(107370, self), text='至尊·麦凯伦').place(x=381 - 110, y=90 + 121)
-        tkinter.Button(self.root, command=lambda: checked(109563, self), text='至尊·涅槃').place(x=481 - 110, y=90 + 121)
-        tkinter.Button(self.root, command=lambda: checked(110710, self), text='至尊·冰凤').place(x=581 - 110, y=90 + 121)
+        car0 = CarMap.max_10_car_map[0]
+        tkinter.Button(self.root, command=lambda: checked(car0["id"], self), text=car0["name"]).place(x=181 - 110, y=90 + 131)
+        car1 = CarMap.max_10_car_map[1]
+        tkinter.Button(self.root, command=lambda: checked(car1["id"], self), text=car1["name"]).place(x=281 - 110, y=90 + 131)
+        car2 = CarMap.max_10_car_map[2]
+        tkinter.Button(self.root, command=lambda: checked(car2["id"], self), text=car2["name"]).place(x=381 - 110, y=90 + 131)
+        car3 = CarMap.max_10_car_map[3]
+        tkinter.Button(self.root, command=lambda: checked(car3["id"], self), text=car3["name"]).place(x=481 - 110, y=90 + 131)
+        car4 = CarMap.max_10_car_map[4]
+        tkinter.Button(self.root, command=lambda: checked(car4["id"], self), text=car4["name"]).place(x=581 - 110, y=90 + 131)
 
-        tkinter.Button(self.root, command=lambda: checked(78292, self), text='创世之神').place(x=181 - 110, y=120 + 121)
-        tkinter.Button(self.root, command=lambda: checked(71452, self), text='神谕天尊').place(x=281 - 110, y=120 + 121)
-        tkinter.Button(self.root, command=lambda: checked(102219, self), text='圣殿剑魂').place(x=381 - 110, y=120 + 121)
-        tkinter.Button(self.root, command=lambda: checked(85942, self), text='圣域大天使').place(x=481 - 110, y=120 + 121)
-        tkinter.Button(self.root, command=lambda: checked(109560, self), text='圣域炽天使').place(x=581 - 110, y=120 + 121)
+        car5 = CarMap.max_10_car_map[5]
+        tkinter.Button(self.root, command=lambda: checked(car5["id"], self), text=car5["name"]).place(x=181 - 110, y=120 + 141)
+        car6 = CarMap.max_10_car_map[6]
+        tkinter.Button(self.root, command=lambda: checked(car6["id"], self), text=car6["name"]).place(x=281 - 110, y=120 + 141)
+        car7 = CarMap.max_10_car_map[7]
+        tkinter.Button(self.root, command=lambda: checked(car7["id"], self), text=car7["name"]).place(x=381 - 110, y=120 + 141)
+        car8 = CarMap.max_10_car_map[8]
+        tkinter.Button(self.root, command=lambda: checked(car8["id"], self), text=car8["name"]).place(x=481 - 110, y=120 + 141)
+        car9 = CarMap.max_10_car_map[9]
+        tkinter.Button(self.root, command=lambda: checked(car9["id"], self), text=car9["name"]).place(x=581 - 110, y=120 + 141)
 
-        tkinter.Button(self.root, command=lambda: checked(63429, self), text='终极幻影').place(x=181 - 110, y=150 + 121)
-        tkinter.Button(self.root, command=lambda: checked(94838, self), text='上古魔尊').place(x=281 - 110, y=150 + 121)
-        tkinter.Button(self.root, command=lambda: checked(115159, self), text='黑域电魔-张飞').place(x=381 - 110, y=150 + 121)
-        tkinter.Button(self.root, command=lambda: checked(113415, self), text='智慧之神-Kitty限定').place(x=481 - 110,
-                                                                                                    y=150 + 121)
-        tkinter.Button(self.root, command=lambda: checked(113413, self), text='S青龙偃月刀-关羽').place(x=581 - 110,
-                                                                                                 y=150 + 121)
-
-        tkinter.Button(self.root, command=lambda: checked(115168, self), text='[帅]奔雷圣卫').place(x=181 - 110, y=180 + 121)
-        tkinter.Button(self.root, command=lambda: checked(89936, self), text='终极烈焰新星').place(x=281 - 110, y=180 + 121)
-        tkinter.Button(self.root, command=lambda: checked(115160, self), text='[S]至曜-玄武').place(x=381 - 110,
-                                                                                                y=180 + 121)
-        tkinter.Button(self.root, command=lambda: checked(110709, self), text='爆天甲-朋克').place(x=481 - 110, y=180 + 121)
-        tkinter.Button(self.root, command=lambda: checked(110711, self), text='众神之神-麒麟').place(x=581 - 110, y=180 + 121)
-
-        tkinter.Button(self.root, command=lambda: checked(101885, self), text='终极黑域电魔').place(x=181 - 110, y=210 + 121)
-        tkinter.Button(self.root, command=lambda: checked(91957, self), text='终极银天使').place(x=281 - 110, y=210 + 121)
-        tkinter.Button(self.root, command=lambda: checked(70047, self), text='终极麦凯伦').place(x=381 - 110, y=210 + 121)
-        tkinter.Button(self.root, command=lambda: checked(85949, self), text='终极紫电神驹').place(x=481 - 110, y=210 + 121)
-        tkinter.Button(self.root, command=lambda: checked(106675, self), text='终极众神之神').place(x=581 - 110, y=210 + 121)
+        # tkinter.Button(self.root, command=lambda: checked(78292, self), text='创世之神').place(x=181 - 110, y=120 + 121)
+        # tkinter.Button(self.root, command=lambda: checked(71452, self), text='神谕天尊').place(x=281 - 110, y=120 + 121)
+        # tkinter.Button(self.root, command=lambda: checked(102219, self), text='圣殿剑魂').place(x=381 - 110, y=120 + 121)
+        # tkinter.Button(self.root, command=lambda: checked(85942, self), text='圣域大天使').place(x=481 - 110, y=120 + 121)
+        # tkinter.Button(self.root, command=lambda: checked(109560, self), text='圣域炽天使').place(x=581 - 110, y=120 + 121)
+        #
+        # tkinter.Button(self.root, command=lambda: checked(63429, self), text='终极幻影').place(x=181 - 110, y=150 + 121)
+        # tkinter.Button(self.root, command=lambda: checked(94838, self), text='上古魔尊').place(x=281 - 110, y=150 + 121)
+        # tkinter.Button(self.root, command=lambda: checked(115159, self), text='黑域电魔-张飞').place(x=381 - 110, y=150 + 121)
+        # tkinter.Button(self.root, command=lambda: checked(113415, self), text='智慧之神-Kitty限定').place(x=481 - 110,
+        #                                                                                             y=150 + 121)
+        # tkinter.Button(self.root, command=lambda: checked(113413, self), text='S青龙偃月刀-关羽').place(x=581 - 110,
+        #                                                                                          y=150 + 121)
+        #
+        # tkinter.Button(self.root, command=lambda: checked(115168, self), text='[帅]奔雷圣卫').place(x=181 - 110, y=180 + 121)
+        # tkinter.Button(self.root, command=lambda: checked(89936, self), text='终极烈焰新星').place(x=281 - 110, y=180 + 121)
+        # tkinter.Button(self.root, command=lambda: checked(115160, self), text='[S]至曜-玄武').place(x=381 - 110,
+        #                                                                                         y=180 + 121)
+        # tkinter.Button(self.root, command=lambda: checked(110709, self), text='爆天甲-朋克').place(x=481 - 110, y=180 + 121)
+        # tkinter.Button(self.root, command=lambda: checked(110711, self), text='众神之神-麒麟').place(x=581 - 110, y=180 + 121)
+        #
+        # tkinter.Button(self.root, command=lambda: checked(101885, self), text='终极黑域电魔').place(x=181 - 110, y=210 + 121)
+        # tkinter.Button(self.root, command=lambda: checked(91957, self), text='终极银天使').place(x=281 - 110, y=210 + 121)
+        # tkinter.Button(self.root, command=lambda: checked(70047, self), text='终极麦凯伦').place(x=381 - 110, y=210 + 121)
+        # tkinter.Button(self.root, command=lambda: checked(85949, self), text='终极紫电神驹').place(x=481 - 110, y=210 + 121)
+        # tkinter.Button(self.root, command=lambda: checked(106675, self), text='终极众神之神').place(x=581 - 110, y=210 + 121)
 
         # 为关闭窗口按钮绑定结束程序事件
         self.root.protocol("WM_DELETE_WINDOW", lambda: on_closing(self.root))
@@ -313,7 +350,7 @@ pyinstaller -F -w -p ../../src --add-data=../../dll/ChangeQS.sys;. --add-data=..
 # 加密
 # python setup.py build_ext --inplace
 ''' 加密打包
-pyinstaller -F -w -p ./build --add-data=./dll/ChangeQS.dll;. --add-data=./dll/cars1.json;. ^
+pyinstaller -F -w -p ./build --add-data=./dll/ChangeQS.dll;.  ^
 --uac-admin -r ./test_python.exe.manifest,1 ./start.py
 '''
 ''' 加壳打包

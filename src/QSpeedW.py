@@ -33,6 +33,33 @@ def to_top(window):
 # 刷许愿树 1次 已打开许愿树的清况
 
 
+# 调整飞车窗口到屏幕分辨率 也就是全屏无边框 然后F7 全屏
+def change2_full_display(h_wnd):
+    DEFAULT_DM = win32api.EnumDisplaySettings(None, win32con.ENUM_CURRENT_SETTINGS)
+    target_size = [DEFAULT_DM.PelsWidth, DEFAULT_DM.PelsHeight]
+    while Window.get_window_size(h_wnd) != target_size:
+        win32api.PostMessage(h_wnd, win32con.WM_KEYDOWN, win32con.VK_F8, 0)
+        time.sleep(0.18)
+
+    # change2_800_600(h_wnd)
+
+    win32api.PostMessage(h_wnd, win32con.WM_KEYDOWN, win32con.VK_F7, 0)
+
+
+# F8退出 全屏
+def exit_full_display(h_wnd):
+    # win32api.PostMessage(h_wnd, win32con.WM_KEYDOWN, win32con.VK_F7, 0)
+    # time.sleep(0.13)
+    win32api.PostMessage(h_wnd, win32con.WM_KEYDOWN, win32con.VK_F8, 0)
+    time.sleep(0.1)
+    win32api.PostMessage(h_wnd, win32con.WM_KEYDOWN, win32con.VK_F8, 0)
+
+    # while Window.get_window_size(h_wnd)[0] < 1023 or \
+    #         Window.DEFAULT_SIZE[0] == Window.get_window_size(h_wnd)[0]:
+    #     win32api.PostMessage(h_wnd, win32con.WM_KEYDOWN, win32con.VK_F8, 0)
+    #     time.sleep(0.18)
+
+
 # 调整飞车窗口到 800*600
 def change2_800_600(h_wnd):
     # 唤起窗口 并切换至最前
@@ -42,7 +69,19 @@ def change2_800_600(h_wnd):
     target_size = [800, 600]
     while Window.get_window_size(h_wnd) != target_size:
         win32api.PostMessage(h_wnd, win32con.WM_KEYDOWN, win32con.VK_F8, 0)
-        time.sleep(0.3)
+        time.sleep(0.18)
+
+
+# 调整飞车窗口到 800*600
+def change2_1280_800(h_wnd):
+    # 唤起窗口 并切换至最前
+    win32gui.SendMessage(h_wnd, win32con.WM_SYSCOMMAND, win32con.SC_RESTORE, 0)
+    win32gui.SetForegroundWindow(h_wnd)
+
+    target_size = [1280, 800]
+    while Window.get_window_size(h_wnd) != target_size:
+        win32api.PostMessage(h_wnd, win32con.WM_KEYDOWN, win32con.VK_F8, 0)
+        time.sleep(0.18)
 
 
 # 获取飞车窗口集合
@@ -80,7 +119,7 @@ def show_speed_window(my_tk):
 
 def login_window(filename, user_name: str, password: str):
     # print("start '' /d " + os.path.dirname(filename) + " " + filename)
-    r_v = os.system('start "" /d ' + os.path.dirname(filename) + " " + filename)
+    r_v = os.system('start \"\" /d \"' + os.path.dirname(filename) + "\" \"" + filename + "\"")
     print("启动情况=>" + str(r_v))
     # 循环检查是否产生 类名为 #32770 的登录窗口 确认两遍
     index = 0

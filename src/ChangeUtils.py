@@ -5,6 +5,7 @@ import numpy
 
 import MemoryUtils
 import Window
+import CarMap
 
 
 class ChangeCar:
@@ -114,12 +115,17 @@ class ChangeCar:
                 print("reChanging scan1 fail ! ")
                 # res_1 = MemoryUtils.write_memory_batch(h_process, self.scanCache[10020], self.target_id)
             if original != 10020:
+                # 如果是皮肤改皮肤
+                # if skinValue != 0 and CarMap.car_map[skinValue] and '[皮肤]' in CarMap.car_map[skinValue]:
+                #     # 皮肤代码改目标
+                #     MemoryUtils.write_memory_batch(h_process, self.scanCache[skinValue], target)
+                # else:
                 # 这里按照实际填的地址改
                 # 首次全改  接下来把首次的恢复并且只改精确值
                 if self.first:
-                    MemoryUtils.write_memory_batch(h_process, self.scanCache[original], target)
                     if skinValue != 0:
                         MemoryUtils.write_memory_batch(h_process, self.scanCache[skinValue], 9988)
+                    MemoryUtils.write_memory_batch(h_process, self.scanCache[original], target)
                     self.reduction = False
                 else:
                     # 把首次改的全部恢复
@@ -129,6 +135,7 @@ class ChangeCar:
                         # if skinValue != 0:
                         #     MemoryUtils.write_memory_batch(h_process, self.scanCache[skinValue], skinValue)
                         self.reduction = True
+
                     # 改特殊值为目标车ID
                 res_3 = MemoryUtils.write_memory_batch(h_process, self.scanCache[2], target)
 

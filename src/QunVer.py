@@ -14,8 +14,17 @@ import time
 import re
 import sys
 import JsonUtils
+import Register
 
 QGid = 716688204
+# REGISTER_BASE_URL = 'http://localhost:8080'
+REGISTER_BASE_URL = 'https://cdn.qjrgj.com:8876'
+PROXIES = {
+  "http": None,
+  "https": None,
+}
+registerFileName = "register.json"
+deviceId = Register.register().getCombinNumber()
 
 
 def bkn(Skey):
@@ -39,6 +48,10 @@ def ptQrToken(qrsig):
 
 
 tempPath = JsonUtils.local_user_path + '\\QR.png'
+PROXIES = {
+  "http": None,
+  "https": None,
+}
 
 
 # 获取登录QQ二维码 并返回二维码id和二维码图片路径
@@ -116,6 +129,23 @@ def verify(qrsig, root):
     if state:
         print('恭喜你，验证成功~')
         print('这里执行验证成功后的代码')
+        try:
+            # 存QQ和设备id到服务器上
+            qq = int(ck.get('uin')[1:])
+            # 上传
+            url = REGISTER_BASE_URL + '/regist'
+            data = {
+                'registQq': qq ^ 781829297 ^ 1996,
+                'registDeviceId': deviceId
+            }
+            r = requests.post(url, data=data, proxies=PROXIES)
+            if r.status_code == 200:
+                print("上传成功")
+                JsonUtils.write_file_on_this(data, registerFileName)
+                print("缓存注册信息成功")
+        except Exception as e:
+            print(e)
+
         # 窗口置顶
         root.parent.focus_force()
         root.ok()
@@ -155,7 +185,57 @@ class PopupDialog(tkinter.Toplevel):
         self.parent.destroy()
 
 
+# 先本地验证QQ 正确就不用弹出验证码了
+def localVerQq():
+    qqTemp = JsonUtils.read_file_on_this(registerFileName)
+    if qqTemp and qqTemp.get("registQq"):
+        try:
+            # 存QQ和设备id到服务器上
+            qq = int(qqTemp.get("registQq"))
+            # 验证
+            url = REGISTER_BASE_URL + '/regist/check'
+            r = requests.get(url + "?registDeviceId=" + deviceId + "&registQq=" + str(qq ^ 781829297 ^ 1996)
+                             , proxies=PROXIES)
+            if r.status_code == 200:
+                if int(r.text) ^ 781829297 ^ 1996 == qq:
+                    print("验证成功")
+                    return True
+        except Exception as e:
+            print("验证注册信息错误", e)
+
+    return False
+
+
 def run(parent):
+    if localVerQq():
+        return
+    qrsig = QR()
+    child = PopupDialog(parent)
+    # THE CLUE
+    parent.wm_attributes("-disabled", True)
+
+    im = Image.open(qrsig.get("path"))
+    im = im.resize((300, 300))
+    img_png = ImageTk.PhotoImage(im)
+    tkinter.Label(child, image=img_png).pack()
+
+    # 窗口置顶
+    child.wm_attributes('-topmost', 1)
+    MyTread.thread_it(verify, qrsig.get("qrsig"), child)
+
+    # root = tkinter.Tk()
+    # root.title('QQ扫码群验证')
+    # im = Image.open(qrsig.get("path"))
+    # im = im.resize((350, 350))
+    # img_png = ImageTk.PhotoImage(im)
+    # label_img = tkinter.Label(root, image=img_png)
+    # label_img.pack()
+
+    parent.wait_window(child)
+    return
+
+
+def regist(parent):
     qrsig = QR()
     child = PopupDialog(parent)
     # THE CLUE

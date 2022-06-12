@@ -10,3 +10,7 @@ PyQt5~=5.15.6
 numpy~=1.21.1
 Cython~=0.29.24
 setuptools~=57.4.0
+pynput~=1.7.6
+des~=1.0.5
+WMI~=1.5.1
+SoundFile~=0.10.3.post1
