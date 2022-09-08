@@ -1,6 +1,9 @@
 # cheat-engine-QQSpeed-By-python  
 cheat engine QQSpeed By python  
 
+LICENSE [AGPL 3.0](https://www.gnu.org/licenses/agpl-3.0.html)
+
+
 #### 主进程  src/Main.py  
 #### 入口 start.py
 #### 加壳后入口 startO.py
